@@ -2,6 +2,10 @@ var expect = require('chai').expect;
 var supertest = require('supertest');
 var server = require('../server');
 var User = require('../models/user-model');
+let bodyParser = require('body-parser');
+
+var urlencodedParser = bodyParser.urlencoded({ extended: true })
+
 
 describe('User tests', () => {
   //fake user data that we'll use for tests
@@ -35,11 +39,40 @@ describe('User tests', () => {
     supertest(server)
       .get('/users')
       .end((err, res) => {
+        // console.log(res.body)
         expect(res.body.length).equal(3);
         expect(res.body[0].username).equal(users[0].username);
         expect(res.body[1].username).equal(users[1].username);
         expect(res.body[2].username).equal(users[2].username);
         done();
       })
-  });
+  }); 
+
+ // it(`'/users/id/:id' should respond with individual users`, (done) => {
+ //    supertest(server)
+ //      .get('/users/id/:id')
+ //      .end((err, res) => {
+ //        console.log(res.params.id)
+ //        // expect(res.body.length).equal(3);
+ //        // expect(res.body[0].username).equal(users[0].username);
+ //        // expect(res.body[1].username).equal(users[1].username);
+ //        // expect(res.body[2].username).equal(users[2].username);
+ //        done();
+ //      })
+ //  }); 
+
+ it(`'/users' should respond with post new users`, (done) => {
+    supertest(server)
+      .post('/users')
+      .end((err, res) => {
+        expect(res.body.username).equal('nick');
+        expect(res.body.email).equal('nick@gmail');
+        expect(res.body.password).equal('javaninja');
+        // expect(res.body.length).equal(3);
+        // console.log(res.body)
+        done();
+      })
+  }); 
+
+
 });
